@@ -6,25 +6,25 @@ namespace SaveRedNS {
 
     public static class RoomController {
 
-        public static event Action perfectHit;
-        public static event Action normalHit;
-        public static event Action<ColorType> beHurt;
+        public static event Action PerfectHit;
+        public static event Action NormalHit;
+        public static event Action<ColorType> BeHurt;
 
         public static void OnPerfectHit() {
 
-            perfectHit?.Invoke();
+            PerfectHit?.Invoke();
 
         }
 
         public static void OnNormalHit() {
 
-            normalHit?.Invoke();
+            NormalHit?.Invoke();
 
         }
 
         public static void OnBeHurt(ColorType _humanColor) {
 
-            beHurt?.Invoke(_humanColor);
+            BeHurt?.Invoke(_humanColor);
             
         }
         

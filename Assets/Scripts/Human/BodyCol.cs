@@ -14,35 +14,23 @@ namespace SaveRedNS {
 
         void OnCollisionEnter2D(Collision2D _col) {
 
-            print(_col.gameObject.name);
+            if (_col.gameObject.tag == TagCollection.GetBulletTag(colorType)) {
 
-            if (hitType == HitType.Perfect) {
-
-                if (_col.gameObject.tag == TagCollection.GetBulletTag(colorType)) {
-
-                    RoomController.OnNormalHit();
-
-                    DestroyImmediate(_col.gameObject);
-
-                } else {
-
-                    print("Dead");
-
-                }
-
-            } else {
-
-                if (_col.gameObject.tag == TagCollection.GetBulletTag(colorType)) {
+                if (hitType == HitType.Perfect) {
 
                     RoomController.OnPerfectHit();
 
-                    DestroyImmediate(_col.gameObject);
-
                 } else {
 
-                    print("Dead");
+                    RoomController.OnNormalHit();
 
                 }
+
+                Destroy(_col.gameObject);
+
+            } else {
+
+                RoomController.OnBeHurt(colorType);
 
             }
 

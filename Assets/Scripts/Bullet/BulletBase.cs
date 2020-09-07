@@ -7,10 +7,11 @@ namespace SaveRedNS {
 
     public class BulletBase : MonoBehaviour {
 
+        [HideInInspector]
         public Rigidbody2D rig;
-        public Sprite greenBullet;
-        public Sprite purpleBullet;
-        public Sprite redBullet;
+
+        public float bpm = 120;
+        float speed;
 
         protected virtual void Awake() {
 
@@ -18,5 +19,14 @@ namespace SaveRedNS {
 
         }
 
+        public void Init(ColorType _color, Vector2 _dir, float _speed) {
+
+            tag = TagCollection.GetBulletTag(_color);
+
+            rig.velocity = _dir * _speed;
+
+        }
+
     }
+
 }
