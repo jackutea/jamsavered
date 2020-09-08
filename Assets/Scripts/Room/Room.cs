@@ -23,12 +23,18 @@ namespace SaveRedNS {
         public AudioSource audioPlayer;
         public Music currentMusic;
 
+        public Text bgmNameTxt;
+        
         public Text hitTimesTxt;
         public Text perfectTimesTxt;
         public Text normalTimesTxt;
+        public Text missTimesTxt;
         int hitMaintainTimes;
         int perfectHitTimes;
         int normalHitTimes;
+        int missTimes;
+
+        float timer;
 
         bool isRunning = false;
 
@@ -39,17 +45,22 @@ namespace SaveRedNS {
 
             RoomController.NormalHit += NormalHit;
             RoomController.PerfectHit += PerfectHit;
-            // RoomController.BeHurt += BeHurt;
+            RoomController.BeHurt += BeHurt;
 
         }
 
         public void Init(Music _music) {
 
+            timer = 0;
+
             currentMusic = _music;
+
+            bgmNameTxt.text = "BGM: " + currentMusic.clip.name;
 
             hitMaintainTimes = 0;
             normalHitTimes = 0;
             perfectHitTimes = 0;
+            missTimes = 0;
 
             RefreshHit();
 
@@ -65,11 +76,25 @@ namespace SaveRedNS {
 
             }
 
+            timer += Time.fixedDeltaTime;
+
+            if (timer >= currentMusic.clip.length + 4) {
+
+                Finished();
+                return;
+
+            }
+
+            if (Input.GetKeyUp(KeyCode.Escape)) {
+
+                Finished();
+                return;
+
+            }
+
             greenHuman?.FixedExecute();
             redHuman?.FixedExecute();
             purpleHuman?.FixedExecute();
-
-            purpleTopShooter?.FixedExecute();
 
         }
 
@@ -77,10 +102,22 @@ namespace SaveRedNS {
 
             isRunning = true;
 
+            PlayMusic();
+
+            SettleHumans();
+
+            SettleShooters();
+
+        }
+
+        void PlayMusic() {
+
             audioPlayer.clip = currentMusic.clip;
-            print(audioPlayer.clip.length);
-            print(audioPlayer.clip.samples);
             audioPlayer.PlayDelayed(currentMusic.preGap + currentMusic.bpm / 240f * 8f);
+
+        }
+
+        void SettleHumans() {
 
             // ---- Settle Humans ----
             if (!redHuman) {
@@ -104,8 +141,33 @@ namespace SaveRedNS {
 
             }
 
+        }
+
+        void SettleShooters() {
+
+            string[,] _csv = CSVUtil.LoadToString(currentMusic.path);
+
             // ---- Settle Shooter ----
-            purpleTopShooter.Init(currentMusic.bpm);
+            for (int i = 0; i < _csv.GetLength(0); i += 1) {
+
+                // PurpleTop
+                if (_csv[i, 0] == "1") {
+                    purpleTopShooter.Shoot(currentMusic.bpm, (Vector2)purpleTopShooter.startTrans.position + i * Vector2.left * 2);
+                }
+
+                if (_csv[i, 1] == "1") {
+                    purpleBottomShooter.Shoot(currentMusic.bpm, (Vector2)purpleBottomShooter.startTrans.position + i * Vector2.left * 2);
+                }
+
+                if (_csv[i, 2] == "1") {
+                    greenTopShooter.Shoot(currentMusic.bpm, (Vector2)greenTopShooter.startTrans.position + i * Vector2.right * 2);
+                }
+
+                if (_csv[i, 3] == "1") {
+                    greenBottomShooter.Shoot(currentMusic.bpm, (Vector2)greenBottomShooter.startTrans.position + i * Vector2.right * 2);
+                }
+
+            }
 
         }
 
@@ -133,15 +195,32 @@ namespace SaveRedNS {
 
         void RefreshHit() {
 
-            perfectTimesTxt.text = "P:" + perfectHitTimes.ToString();
-            normalTimesTxt.text = "N: " + normalHitTimes.ToString();
+            perfectTimesTxt.text = "Perfect:" + perfectHitTimes.ToString();
+            normalTimesTxt.text = "Normal: " + normalHitTimes.ToString();
+            missTimesTxt.text = "Ignore: " + missTimes.ToString();
             hitTimesTxt.text = "Combo: " + hitMaintainTimes.ToString();
 
         }
 
-        public void BeHurt() {
+        public void BeHurt(ColorType _colorType) {
 
-            StopGame();
+            missTimes += 1;
+            hitMaintainTimes = 0;
+            RefreshHit();
+
+        }
+
+        void Finished() {
+
+            isRunning = false;
+
+            purpleTopShooter.StopAllBullets();
+            purpleBottomShooter.StopAllBullets();
+            greenTopShooter.StopAllBullets();
+            greenBottomShooter.StopAllBullets();
+
+            App.Instance.EnterThank();
+
 
         }
 

@@ -15,8 +15,6 @@ namespace SaveRedNS {
 
         protected virtual void Awake() {
 
-            print("AWAKE");
-
             rig = GetComponent<Rigidbody2D>();
 
         }
@@ -24,6 +22,12 @@ namespace SaveRedNS {
         public void Init(ColorType _color, Vector2 _dir, float _speed) {
 
             tag = TagCollection.GetBulletTag(_color);
+
+            if (_color == ColorType.Green) {
+
+                GetComponent<SpriteRenderer>().sprite = SpriteCollection.Instance.greenBullet;
+
+            }
 
             rig.velocity = _dir * _speed;
 

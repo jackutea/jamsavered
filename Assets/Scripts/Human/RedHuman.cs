@@ -31,7 +31,7 @@ namespace SaveRedNS {
 
                 Destroy(_col.gameObject);
 
-                print("Dead: Red Be Hit");
+                RoomController.OnBeHurt(colorType);
 
             }
 

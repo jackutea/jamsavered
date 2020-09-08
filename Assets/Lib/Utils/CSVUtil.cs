@@ -7,6 +7,44 @@ namespace JackUtil {
 
     public static class CSVUtil {
 
+        public static void SaveCSV(string _path, List<string[]> _dataList) {
+
+            using(StreamWriter _sw = File.CreateText(_path)) {
+
+                for (int i = 0; i < _dataList.Count; i += 1) {
+
+                    string _l = string.Empty;
+
+                    string[] _d = _dataList[i];
+
+                    for (int j = 0; j < _d.Length; j += 1) {
+
+                        string _n = _d[j];
+
+                        if (j == _d.Length - 1) {
+
+                            _l += _n;
+
+                        } else {
+
+                            _l += _n + ",";
+
+                        }
+
+                    }
+
+                    _sw.WriteLine(_l);
+
+                }
+
+            }
+
+        }
+
+        /// <summary>
+        /// string[行, 列] _arr;
+        /// 例: _arr[0, 1] 是第0行的第1列
+        /// </summary>
         public static string[,] LoadToString(string _path) {
 
             string[] _str = File.ReadAllLines(_path);

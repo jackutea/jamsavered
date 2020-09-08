@@ -6,7 +6,7 @@ TagManager:
   tags:
   - PurpleBullet
   - RedBullet
-  - GreedBullet
+  - GreenBullet
   layers:
   - Default
   - TransparentFX

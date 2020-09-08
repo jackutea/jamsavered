@@ -7,66 +7,51 @@ namespace SaveRedNS {
 
     public class Shooter : MonoBehaviour {
 
-        public float bpm;
-        public float gapTime;
-        public float gapTimeBase;
-
-        public bool isRunning = false;
-
         public ColorType colorType;
         public Vector2 dir = Vector2.right;
 
         public Transform startTrans;
         public BulletBase bulletPrefab;
 
+        List<BulletBase> bulletList;
+
         void Start() {
 
-            isRunning = false;
+        }
+
+        public void Shoot(float _bpm, Vector2 _pos) {
+
+            float _speed = _bpm / 240f * 8f;
+
+            BulletBase _bulletGo = Instantiate(bulletPrefab);
+            _bulletGo.transform.position = _pos;
+            _bulletGo.Init(colorType, dir, _speed);
+
+            if (bulletList == null) {
+
+                bulletList = new List<BulletBase>();
+
+            }
+
+            bulletList.Add(_bulletGo);
 
         }
 
-        public void Init(float _bpm) {
+        public void StopAllBullets() {
 
-            bpm = _bpm;
+            if (bulletList == null) {
 
-            gapTimeBase = 240f / _bpm * 0.25f;
-
-            gapTime = 0;
-
-            // Shoot();
-
-            isRunning = true;
-
-        }
-
-        public void FixedExecute() {
-
-            if (!isRunning) {
-
+                DebugUtil.LogError("列表不存在");
                 return;
 
             }
 
-            gapTime += Time.fixedDeltaTime;
+            for (int i = 0; i < bulletList.Count; i += 1) {
 
-            if (gapTime >= gapTimeBase) {
-
-                gapTime = 0;
-
-                Shoot();
+                BulletBase _b = bulletList[i];
+                Destroy(_b.gameObject);
 
             }
-
-        }
-
-        public void Shoot() {
-
-            float _speed = bpm / 240f * 8f;
-
-            BulletBase _bulletGo = Instantiate(bulletPrefab);
-            _bulletGo.transform.position = startTrans.position;
-            print("SHOOT");
-            _bulletGo.Init(colorType, dir, _speed);
 
         }
 
