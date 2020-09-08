@@ -25,19 +25,17 @@ namespace SaveRedNS {
 
             random = new System.Random(0);
 
-            path = Application.dataPath + "/BGMData/" + clip.name;
+            string _dir = Application.dataPath + "/BGMData/";
 
-            // if (!File.Exists(path)) {
+            FileUtil.CreateDirIfNorExist(_dir);
 
-            //     GenerateCSV();
+            path = _dir + clip.name;
 
-            // }
-
-            GenerateCSV();
+            GenerateCSV(path);
 
         }
 
-        void GenerateCSV() {
+        void GenerateCSV(string _path) {
 
             List<string[]> _noteList = new List<string[]>(noteLength);
 
@@ -48,7 +46,7 @@ namespace SaveRedNS {
 
             }
 
-            CSVUtil.SaveCSV(path, _noteList);
+            CSVUtil.SaveCSV(_path, _noteList);
 
         }
 

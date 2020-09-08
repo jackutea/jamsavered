@@ -24,6 +24,8 @@ namespace SaveRedNS {
         public Music currentMusic;
 
         public Text bgmNameTxt;
+
+        public Image processImg;
         
         public Text hitTimesTxt;
         public Text perfectTimesTxt;
@@ -78,9 +80,10 @@ namespace SaveRedNS {
 
             timer += Time.fixedDeltaTime;
 
-            if (timer >= currentMusic.clip.length + 4) {
+            if (timer >= currentMusic.clip.length) {
 
                 Finished();
+                timer = 0;
                 return;
 
             }
@@ -91,6 +94,8 @@ namespace SaveRedNS {
                 return;
 
             }
+
+            processImg.fillAmount = timer / currentMusic.clip.length;
 
             greenHuman?.FixedExecute();
             redHuman?.FixedExecute();

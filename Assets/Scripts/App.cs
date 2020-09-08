@@ -34,11 +34,11 @@ namespace SaveRedNS {
 
         void Start() {
 
-            EnterMenu();
-
             startButton.onClick.AddListener(EnterGame);
 
             backButton.onClick.AddListener(EnterThank);
+
+            EnterMenu();
 
         }
 

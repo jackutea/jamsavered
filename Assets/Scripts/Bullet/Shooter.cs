@@ -49,7 +49,12 @@ namespace SaveRedNS {
             for (int i = 0; i < bulletList.Count; i += 1) {
 
                 BulletBase _b = bulletList[i];
-                Destroy(_b.gameObject);
+                
+                if (_b != null) {
+                    
+                    Destroy(_b.gameObject);
+
+                }
 
             }
 
