@@ -15,6 +15,8 @@ namespace SaveRedNS {
 
         protected virtual void Awake() {
 
+            print("AWAKE");
+
             rig = GetComponent<Rigidbody2D>();
 
         }

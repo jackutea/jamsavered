@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,12 @@ namespace SaveRedNS {
         public Transform centerTrans;
 
         public Shooter purpleTopShooter;
+        public Shooter purpleBottomShooter;
+        public Shooter greenTopShooter;
+        public Shooter greenBottomShooter;
+
+        public AudioSource audioPlayer;
+        public Music currentMusic;
 
         public Text hitTimesTxt;
         public Text perfectTimesTxt;
@@ -32,10 +39,13 @@ namespace SaveRedNS {
 
             RoomController.NormalHit += NormalHit;
             RoomController.PerfectHit += PerfectHit;
+            // RoomController.BeHurt += BeHurt;
 
         }
 
-        public void Init() {
+        public void Init(Music _music) {
+
+            currentMusic = _music;
 
             hitMaintainTimes = 0;
             normalHitTimes = 0;
@@ -45,29 +55,6 @@ namespace SaveRedNS {
 
             StartGame();
 
-            purpleTopShooter.Init(120);
-
-            if (!redHuman) {
-
-                redHuman.Init();
-                redHuman.transform.position = (Vector2)centerTrans.position;
-                
-            }
-
-            if (!purpleHuman) {
-
-                purpleHuman.Init();
-                purpleHuman.transform.position = (Vector2)centerTrans.position + Vector2.left;
-
-            }
-
-            if (!greenHuman) {
-
-                greenHuman.Init();
-                greenHuman.transform.position = (Vector2)centerTrans.position + Vector2.right;
-
-            }
-            
         }
 
         void FixedUpdate() {
@@ -89,6 +76,36 @@ namespace SaveRedNS {
         public void StartGame() {
 
             isRunning = true;
+
+            audioPlayer.clip = currentMusic.clip;
+            print(audioPlayer.clip.length);
+            print(audioPlayer.clip.samples);
+            audioPlayer.PlayDelayed(currentMusic.preGap + currentMusic.bpm / 240f * 8f);
+
+            // ---- Settle Humans ----
+            if (!redHuman) {
+
+                redHuman.Init();
+                redHuman.transform.position = (Vector2)centerTrans.position;
+                
+            }
+
+            if (!purpleHuman) {
+
+                purpleHuman.Init();
+                purpleHuman.transform.position = (Vector2)centerTrans.position + Vector2.left;
+
+            }
+
+            if (!greenHuman) {
+
+                greenHuman.Init();
+                greenHuman.transform.position = (Vector2)centerTrans.position + Vector2.right;
+
+            }
+
+            // ---- Settle Shooter ----
+            purpleTopShooter.Init(currentMusic.bpm);
 
         }
 

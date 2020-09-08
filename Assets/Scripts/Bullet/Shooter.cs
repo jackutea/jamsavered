@@ -7,7 +7,7 @@ namespace SaveRedNS {
 
     public class Shooter : MonoBehaviour {
 
-        public float bpm = 120;
+        public float bpm;
         public float gapTime;
         public float gapTimeBase;
 
@@ -29,11 +29,11 @@ namespace SaveRedNS {
 
             bpm = _bpm;
 
-            gapTimeBase = bpm * 0.25f * 0.125f * 0.125f;
+            gapTimeBase = 240f / _bpm * 0.25f;
 
             gapTime = 0;
 
-            Shoot();
+            // Shoot();
 
             isRunning = true;
 
@@ -61,10 +61,11 @@ namespace SaveRedNS {
 
         public void Shoot() {
 
-            float _speed = bpm * 0.25f * 0.125f;
+            float _speed = bpm / 240f * 8f;
 
             BulletBase _bulletGo = Instantiate(bulletPrefab);
             _bulletGo.transform.position = startTrans.position;
+            print("SHOOT");
             _bulletGo.Init(colorType, dir, _speed);
 
         }
